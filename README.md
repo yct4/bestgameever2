@@ -11,15 +11,16 @@ Game is over if ball travels past the paddle.
 
 ## Tasks
 
-1. Create SDL2 window and be able to close window. 
-2. Animate a moving ball on the screen. (One class.)
+1. Ensure code works/can be compiled on any machine. (esp. for MacOSX)
+2. Create SDL2 window and be able to close window. 
+3. Animate a moving ball on the screen. (One class.)
 - Ball bouncing off walls but game stopping if going past a side. 
 - Trajectory of ball.
 - How to speed up ball. 
-3. Animate a moving paddle on the screen. (One class.)
+4. Animate a moving paddle on the screen. (One class.)
 - Moving left and right
-4. Create automatic paddle movement for computer player. 
-5. Keeping score and displaying score. (Another class.)
+5. Create automatic paddle movement for computer player. 
+6. Keeping score and displaying score. (Another class.)
 
 ## Sources
 
