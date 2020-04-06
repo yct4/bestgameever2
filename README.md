@@ -16,7 +16,7 @@ Game is over if ball travels past the paddle.
 3. Clean up background so it's blank. 
 4. Organize/clean up existing code. 
 5. Animate a moving ball on the screen (one class):
-- Collision detection.
+- Collision detection. 
 - Ball bouncing off walls but game stopping if going past a side. 
 - Trajectory of ball.
 - How to speed up ball. 

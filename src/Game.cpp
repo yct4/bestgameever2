@@ -40,6 +40,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
     ball = new Ball();
     ball->init();
 
+<<<<<<< HEAD
     player1 = new Player(SDL_SCANCODE_UP, SDL_SCANCODE_DOWN);
     int x1_init = (SCREEN_WIDTH - dest.w); // right side
     int y1_init = (SCREEN_HEIGHT - dest.h) / 2; // starts in the middle
@@ -49,6 +50,11 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
     int x2_init = 0; // left side
     int y2_init = (SCREEN_HEIGHT - dest.h) / 2; // starts in the middle
     player2->init(x2_init, y1_init, SDL_SCANCODE_W, SDL_SCANCODE_S);
+=======
+    player1 = new Player();
+    player1->init();
+
+>>>>>>> added Player class, cleaned up Game class, added more tasks to readme
 }
 
 
@@ -118,7 +124,10 @@ void Game::render() {
 
     //render game objects
     player1->render(renderer); // player
+<<<<<<< HEAD
     player2->render(renderer);
+=======
+>>>>>>> added Player class, cleaned up Game class, added more tasks to readme
     ball->render(renderer);
 
     SDL_RenderPresent(renderer);
