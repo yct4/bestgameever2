@@ -2,7 +2,8 @@
 #include "TextureManager.hpp"
 #include <stdio.h>
 
-
+const int SCREEN_HEIGHT = 640;
+const int SCREEN_WIDTH = 800;
 SDL_Renderer* Game::renderer = nullptr;
 
 Game::Game() {}
@@ -53,6 +54,9 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
     map = new Map();
 
+    ball = new Ball();
+    ball->init();
+
 }
 
 void Game::DrawMap() {
@@ -88,16 +92,11 @@ void Game::renderBlock(SDL_Window* window, SDL_Rect* box) {
     box->x = 0;
     box->y = 0; 
 
-    //window = SDL_CreateWindow("", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 250, 250, NULL);
-    //renderer = SDL_CreateRenderer(window, 0, SDL_RENDERER_ACCELERATED);
     SDL_SetRenderDrawColor(renderer, 255,255,255,255);
     SDL_RenderClear(renderer);
     //outline rect
     SDL_SetRenderDrawColor(renderer, 0 , 0, 0, 255);
     SDL_RenderDrawRect(renderer, box);
-    //SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    //fill up rectangle with color
-    //SDL_RenderFillRect(renderer, box);
 }
 
 void Game::handleEvents() {
@@ -143,8 +142,8 @@ void Game::handleEvents() {
     } 
 
     // right boundary 
-    if (dest.x + dest.w > 1000) {
-        dest.x = 1000 - dest.w; 
+    if (dest.x + dest.w > SCREEN_WIDTH) {
+        dest.x = SCREEN_WIDTH - dest.w; 
     }
 
     // left boundary 
@@ -153,8 +152,8 @@ void Game::handleEvents() {
     }
 
     // bottom boundary 
-    if (dest.y + dest.h > 1000) {
-        dest.y = 1000 - dest.h; 
+    if (dest.y + dest.h > SCREEN_HEIGHT) {
+        dest.y = SCREEN_HEIGHT - dest.h; 
     }
 
     // upper boundary 
@@ -168,19 +167,16 @@ void Game::update() {
     count++;
     destRect.h = 128;
     destRect.w = 128;
-
-    //map->LoadMap(); todo text file with different arrays
+    ball->move();
 }
 
 void Game::render() {
     SDL_SetRenderDrawColor(renderer, 255,255,255,255); // set color to write
     SDL_RenderClear(renderer); // clear renderer with latest set color
 
-    //SDL_Rect block1;
-    //renderBlock(window, &block1); // TODO render background function that renders all the blocks, also sets boundaries for player
     map->DrawMap();
     SDL_RenderCopy(renderer, playerTex, NULL, &dest); // player
-    //SDL_RenderCopy(renderer, map->water, NULL, &(map->dest));
+    ball->render(renderer);
 
     SDL_RenderPresent(renderer);
 }
