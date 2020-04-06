@@ -110,8 +110,12 @@ void Game::handleEvents() {
             // keyboard API for key pressed 
             switch (event.key.keysym.scancode) { 
                 case SDL_SCANCODE_ESCAPE:
+                    printf("close app (esc)\n");
                     isRunning = false;
+                    break;
+                case SDL_QUIT:
                     printf("close app\n");
+                    isRunning = false;
                     break;
                 case SDL_SCANCODE_W: 
                 case SDL_SCANCODE_UP: 
@@ -132,7 +136,10 @@ void Game::handleEvents() {
                 default:
                     break;
             } 
-        } 
+        } else if (event.type == SDL_QUIT) {
+            isRunning = false;
+            break;
+        }
     } 
 
     // right boundary 
