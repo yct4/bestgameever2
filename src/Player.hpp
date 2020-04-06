@@ -6,13 +6,13 @@
 #include "TextureManager.hpp"
 
 class Player {
-public:
-    Player();
+public:  
+    Player(int _up, int _down);
     ~Player();
 
     int speed = 300;
 
-    void init();
+    void init(int _x, int _y, int _up, int _down);
     void render(SDL_Renderer* render);
     void move(SDL_Event& event);
 
@@ -23,6 +23,8 @@ private:
     SDL_Texture* playerTexture;
     SDL_Rect srcRect, destRect;
     SDL_Texture* playerTex;
+    const int scancode_up;
+    const int scancode_down;
 
     // TODO add parameterized key bindings
     // TODO add parameterized initial positions

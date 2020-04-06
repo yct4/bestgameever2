@@ -49,7 +49,7 @@ class Game {
         Map* map;
         Ball* ball;
         Player* player1;
-        //Player* player2;
+        Player* player2;
 };
 
 #endif // Game_hpp
