@@ -56,7 +56,7 @@ void Ball::move() {
 }
 
 void Ball::render(SDL_Renderer* renderer) {
-    SDL_RenderCopy(renderer, ballTex, NULL, &dest); // player
+    SDL_RenderCopy(renderer, ballTex, NULL, &dest);
 }
 
 void Ball::change_spd() {}

@@ -6,6 +6,7 @@
 // #include "GameObject.hpp"
 #include "Map.hpp"
 #include "Ball.hpp"
+#include "Player.hpp"
 
 class Game {
 
@@ -47,6 +48,8 @@ class Game {
         // GameObject* player;
         Map* map;
         Ball* ball;
+        Player* player1;
+        //Player* player2;
 };
 
 #endif // Game_hpp
