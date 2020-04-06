@@ -40,9 +40,15 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
     ball = new Ball();
     ball->init();
 
-    player1 = new Player();
-    player1->init();
+    player1 = new Player(SDL_SCANCODE_UP, SDL_SCANCODE_DOWN);
+    int x1_init = (SCREEN_WIDTH - dest.w); // right side
+    int y1_init = (SCREEN_HEIGHT - dest.h) / 2; // starts in the middle
+    player1->init(x1_init, y1_init, SDL_SCANCODE_UP, SDL_SCANCODE_DOWN);
 
+    player2 = new Player(SDL_SCANCODE_W, SDL_SCANCODE_S);
+    int x2_init = 0; // left side
+    int y2_init = (SCREEN_HEIGHT - dest.h) / 2; // starts in the middle
+    player2->init(x2_init, y1_init, SDL_SCANCODE_W, SDL_SCANCODE_S);
 }
 
 
@@ -86,6 +92,7 @@ void Game::handleEvents() {
                 break;
             }
             player1->move(event); // player
+            player2->move(event);
 
         } else if (event.type == SDL_QUIT) { // exit game if window is closed
             isRunning = false;
@@ -111,6 +118,7 @@ void Game::render() {
 
     //render game objects
     player1->render(renderer); // player
+    player2->render(renderer);
     ball->render(renderer);
 
     SDL_RenderPresent(renderer);

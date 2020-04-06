@@ -17,8 +17,8 @@ void Ball::init() {
     SDL_QueryTexture(ballTex, NULL, NULL, &dest.w, &dest.h);
 
     // adjust height and width of our image box.
-    dest.w /= 6;
-    dest.h /= 6;
+    dest.w /= 10;
+    dest.h /= 10;
 
     // sets initial x-position of object middle of screen
     dest.x = (SCREEN_WIDTH - dest.w) / 2;
