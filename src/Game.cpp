@@ -8,7 +8,10 @@ SDL_Renderer* Game::renderer = nullptr;
 
 Game::Game() {}
 Game::~Game() {}
+
+
 void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen) {
+    // init screen
     int flags = (fullscreen) ? SDL_WINDOW_FULLSCREEN : 0;
 
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
@@ -27,37 +30,21 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         printf("renderer created!\n");
     }
 
+    // init other variables
     isRunning = true;
 
-    // loads file as texture
-    playerTex = TextureManager::LoadTexture("../assets/player.png");
-    
-
-    // connects our texture with dest to control position
-    SDL_QueryTexture(playerTex, NULL, NULL, &dest.w, &dest.h);
-
-    // adjust height and width of our image box.
-    dest.w /= 6;
-    dest.h /= 6;
-
-    // sets initial x-position of object
-    dest.x = (1000 - dest.w) / 2;
-
-    // sets initial y-position of object
-    dest.y = (1000 - dest.h) / 2;
-
-    // controls annimation loop
-    close = 0;
-
-    // speed of box
-    speed = 300;
-
+    // init map
     map = new Map();
 
+    // init game objects
     ball = new Ball();
     ball->init();
 
+    player1 = new Player();
+    player1->init();
+
 }
+
 
 void Game::DrawMap() {
     int type = 0;
@@ -86,18 +73,6 @@ void Game::DrawMap() {
     }
 }
 
-void Game::renderBlock(SDL_Window* window, SDL_Rect* box) {
-    box->w = 10; 
-    box->h = 10; 
-    box->x = 0;
-    box->y = 0; 
-
-    SDL_SetRenderDrawColor(renderer, 255,255,255,255);
-    SDL_RenderClear(renderer);
-    //outline rect
-    SDL_SetRenderDrawColor(renderer, 0 , 0, 0, 255);
-    SDL_RenderDrawRect(renderer, box);
-}
 
 void Game::handleEvents() {
     SDL_Event event; 
@@ -106,60 +81,18 @@ void Game::handleEvents() {
     while (SDL_PollEvent(&event)) { 
 
         if (event.type == SDL_KEYDOWN){ 
-            // keyboard API for key pressed 
-            switch (event.key.keysym.scancode) { 
-                case SDL_SCANCODE_ESCAPE:
-                    printf("close app (esc)\n");
-                    isRunning = false;
-                    break;
-                case SDL_QUIT:
-                    printf("close app\n");
-                    isRunning = false;
-                    break;
-                case SDL_SCANCODE_W: 
-                case SDL_SCANCODE_UP: 
-                    dest.y -= speed / 30; 
-                    break; 
-                case SDL_SCANCODE_A: 
-                case SDL_SCANCODE_LEFT: 
-                    dest.x -= speed / 30; 
-                    break; 
-                case SDL_SCANCODE_S: 
-                case SDL_SCANCODE_DOWN: 
-                    dest.y += speed / 30; 
-                    break; 
-                case SDL_SCANCODE_D: 
-                case SDL_SCANCODE_RIGHT: 
-                    dest.x += speed / 30; 
-                    break; 
-                default:
-                    break;
-            } 
-        } else if (event.type == SDL_QUIT) {
+            if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) { // exit game
+                isRunning = false;
+                break;
+            }
+            player1->move(event); // player
+
+        } else if (event.type == SDL_QUIT) { // exit game if window is closed
             isRunning = false;
             break;
         }
     } 
 
-    // right boundary 
-    if (dest.x + dest.w > SCREEN_WIDTH) {
-        dest.x = SCREEN_WIDTH - dest.w; 
-    }
-
-    // left boundary 
-    if (dest.x < 0) {
-        dest.x = 0; 
-    }
-
-    // bottom boundary 
-    if (dest.y + dest.h > SCREEN_HEIGHT) {
-        dest.y = SCREEN_HEIGHT - dest.h; 
-    }
-
-    // upper boundary 
-    if (dest.y < 0) {
-        dest.y = 0; 
-    }
 }
 
 
@@ -175,7 +108,9 @@ void Game::render() {
     SDL_RenderClear(renderer); // clear renderer with latest set color
 
     map->DrawMap();
-    SDL_RenderCopy(renderer, playerTex, NULL, &dest); // player
+
+    //render game objects
+    player1->render(renderer); // player
     ball->render(renderer);
 
     SDL_RenderPresent(renderer);
