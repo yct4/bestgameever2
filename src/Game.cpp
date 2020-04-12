@@ -1,5 +1,6 @@
 #include "Game.hpp"
 #include "TextureManager.hpp"
+#include "Player.hpp"
 #include <stdio.h>
 
 const int SCREEN_HEIGHT = 640;
@@ -41,13 +42,13 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
     ball->init();
 
     player1 = new Player(SDL_SCANCODE_UP, SDL_SCANCODE_DOWN);
-    int x1_init = (SCREEN_WIDTH - dest.w); // right side
-    int y1_init = (SCREEN_HEIGHT - dest.h) / 2; // starts in the middle
+    int x1_init = (SCREEN_WIDTH - 20 * player1->get_Rect()->w) ; // right side
+    int y1_init = (SCREEN_HEIGHT - player1->get_Rect()->h) / 2; // starts in the middle
     player1->init(x1_init, y1_init, SDL_SCANCODE_UP, SDL_SCANCODE_DOWN);
 
     player2 = new Player(SDL_SCANCODE_W, SDL_SCANCODE_S);
     int x2_init = 0; // left side
-    int y2_init = (SCREEN_HEIGHT - dest.h) / 2; // starts in the middle
+    int y2_init = (SCREEN_HEIGHT - player2->get_Rect()->h) / 2; // starts in the middle
     player2->init(x2_init, y1_init, SDL_SCANCODE_W, SDL_SCANCODE_S);
 }
 
@@ -105,16 +106,17 @@ void Game::handleEvents() {
 
 void Game::update() {
     count++;
-    destRect.h = 128;
-    destRect.w = 128;
-    ball->move();
+    // destRect.h = 128;
+    // destRect.w = 128;
+    ball->move(player1->get_Rect());
+    ball->move(player2->get_Rect());
 }
 
 void Game::render() {
     SDL_SetRenderDrawColor(renderer, 255,255,255,255); // set color to write
     SDL_RenderClear(renderer); // clear renderer with latest set color
 
-    map->DrawMap();
+   //map->DrawMap();
 
     //render game objects
     player1->render(renderer); // player

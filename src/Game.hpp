@@ -41,10 +41,10 @@ class Game {
         SDL_Window* window;
         bool isRunning;
         int count = 0;
-        SDL_Rect dest;
-        SDL_Texture* playerTexture;
-        SDL_Rect srcRect, destRect;
-        SDL_Texture* playerTex;
+        // SDL_Rect dest;
+        // SDL_Texture* playerTexture;
+        // SDL_Rect srcRect, destRect;
+        // SDL_Texture* playerTex;
         // GameObject* player;
         Map* map;
         Ball* ball;

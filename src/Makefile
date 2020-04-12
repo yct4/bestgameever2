@@ -9,7 +9,8 @@ all : $(OBJS)
 
 clean :
 	rm $(OBJ_Name).exe
-
+run :
+	$(OBJ_Name).exe
 
 setup-windows:
 
