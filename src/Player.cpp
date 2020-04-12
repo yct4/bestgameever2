@@ -39,6 +39,10 @@ void Player::render(SDL_Renderer* renderer) {
     SDL_RenderCopy(renderer, playerTex, NULL, &dest); // player
 }
 
+SDL_Rect* Player::get_Rect() {
+    return &dest;
+}
+
 void Player::move(SDL_Event& event) {
     // keyboard API for key pressed
     if (event.key.keysym.scancode == scancode_up) {
@@ -46,40 +50,6 @@ void Player::move(SDL_Event& event) {
     } else if (event.key.keysym.scancode == scancode_down) {
         dest.y += speed / 10;
     }
-    // 'this' can't be part of const expression
-    // switch (event.key.keysym.scancode) { 
-    //     case test: 
-    //         dest.y -= speed / 30; 
-    //         break;
-    //     // case scancode_up: 
-    //     //     dest.y -= speed / 30; 
-    //     //     break; 
-    //     // case scancode_down: 
-    //     //     dest.y += speed / 30; 
-    //     //     break; 
-    //     default:
-    //         break;
-    // }
-    // switch (event.key.keysym.scancode) { 
-    //     case SDL_SCANCODE_W: 
-    //     case SDL_SCANCODE_UP: 
-    //         dest.y -= speed / 30; 
-    //         break; 
-    //     case SDL_SCANCODE_A: 
-    //     case SDL_SCANCODE_LEFT: 
-    //         dest.x -= speed / 30; 
-    //         break; 
-    //     case SDL_SCANCODE_S: 
-    //     case SDL_SCANCODE_DOWN: 
-    //         dest.y += speed / 30; 
-    //         break; 
-    //     case SDL_SCANCODE_D: 
-    //     case SDL_SCANCODE_RIGHT: 
-    //         dest.x += speed / 30; 
-    //         break; 
-    //     default:
-    //         break;
-    // }
 
     // dest.y += speed / 30;
     // dest.x += speed / 30;

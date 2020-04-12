@@ -30,22 +30,27 @@ void Ball::init() {
     speed = 300;
 }
 
-void Ball::move() {
-    dest.y += speed / 30;
-    dest.x += speed / 30;
+void Ball::move(const SDL_Rect* player_rect) {
+    // dest.y += speed / 50;
+    dest.x += speed / 100;
 
     // right boundary 
     if (dest.x + dest.w > SCREEN_WIDTH) {
-        dest.x = SCREEN_WIDTH - dest.w; 
-    }
-
-    // left boundary 
-    if (dest.x < 0) {
+        dest.x = SCREEN_WIDTH - dest.w; // TODO game over
+    } else if (dest.x < 0) { // left boundary
         dest.x = 0; 
     }
 
-    // bottom boundary 
-    if (dest.y + dest.h > SCREEN_HEIGHT) {
+    //hits player paddle
+    else if (SDL_HasIntersection(player_rect, &dest)) {
+        dest.y -= speed / 100; // TODO change angle of y 
+        dest.x -= speed / 100; 
+    }
+
+    // rebound bottom/top boundary 
+
+    //lower boundary
+    if (dest.y + dest.h > SCREEN_HEIGHT || dest.y < 0) {
         dest.y = SCREEN_HEIGHT - dest.h; 
     }
 

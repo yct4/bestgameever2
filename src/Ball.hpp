@@ -13,7 +13,7 @@ public:
     int speed = 300;
 
     void init();
-    void move();
+    void move(const SDL_Rect* player);
     void render(SDL_Renderer* render);
     void change_spd();
 

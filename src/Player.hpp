@@ -15,6 +15,7 @@ public:
     void init(int _x, int _y, int _up, int _down);
     void render(SDL_Renderer* render);
     void move(SDL_Event& event);
+    SDL_Rect* get_Rect();
 
     static const char* PLAYER_FILE;
 
