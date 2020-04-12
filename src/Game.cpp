@@ -2,12 +2,16 @@
 #include "TextureManager.hpp"
 #include <stdio.h>
 
-
+const int SCREEN_HEIGHT = 640;
+const int SCREEN_WIDTH = 800;
 SDL_Renderer* Game::renderer = nullptr;
 
 Game::Game() {}
 Game::~Game() {}
+
+
 void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen) {
+    // init screen
     int flags = (fullscreen) ? SDL_WINDOW_FULLSCREEN : 0;
 
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
@@ -26,34 +30,27 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         printf("renderer created!\n");
     }
 
+    // init other variables
     isRunning = true;
 
-    // loads file as texture
-    playerTex = TextureManager::LoadTexture("../assets/player.png");
-    
-
-    // connects our texture with dest to control position
-    SDL_QueryTexture(playerTex, NULL, NULL, &dest.w, &dest.h);
-
-    // adjust height and width of our image box.
-    dest.w /= 6;
-    dest.h /= 6;
-
-    // sets initial x-position of object
-    dest.x = (1000 - dest.w) / 2;
-
-    // sets initial y-position of object
-    dest.y = (1000 - dest.h) / 2;
-
-    // controls annimation loop
-    close = 0;
-
-    // speed of box
-    speed = 300;
-
+    // init map
     map = new Map();
 
+    // init game objects
+    ball = new Ball();
+    ball->init();
+
+    player1 = new Player(SDL_SCANCODE_UP, SDL_SCANCODE_DOWN);
+    int x1_init = (SCREEN_WIDTH - dest.w); // right side
+    int y1_init = (SCREEN_HEIGHT - dest.h) / 2; // starts in the middle
+    player1->init(x1_init, y1_init, SDL_SCANCODE_UP, SDL_SCANCODE_DOWN);
+
+    player2 = new Player(SDL_SCANCODE_W, SDL_SCANCODE_S);
+    int x2_init = 0; // left side
+    int y2_init = (SCREEN_HEIGHT - dest.h) / 2; // starts in the middle
+    player2->init(x2_init, y1_init, SDL_SCANCODE_W, SDL_SCANCODE_S);
 }
+
 
 void Game::DrawMap() {
     int type = 0;
@@ -82,23 +79,6 @@ void Game::DrawMap() {
     }
 }
 
-void Game::renderBlock(SDL_Window* window, SDL_Rect* box) {
-    box->w = 10; 
-    box->h = 10; 
-    box->x = 0;
-    box->y = 0; 
-
-    //window = SDL_CreateWindow("", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 250, 250, NULL);
-    //renderer = SDL_CreateRenderer(window, 0, SDL_RENDERER_ACCELERATED);
-    SDL_SetRenderDrawColor(renderer, 255,255,255,255);
-    SDL_RenderClear(renderer);
-    //outline rect
-    SDL_SetRenderDrawColor(renderer, 0 , 0, 0, 255);
-    SDL_RenderDrawRect(renderer, box);
-    //SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    //fill up rectangle with color
-    //SDL_RenderFillRect(renderer, box);
-}
 
 void Game::handleEvents() {
     SDL_Event event; 
@@ -107,53 +87,19 @@ void Game::handleEvents() {
     while (SDL_PollEvent(&event)) { 
 
         if (event.type == SDL_KEYDOWN){ 
-            // keyboard API for key pressed 
-            switch (event.key.keysym.scancode) { 
-                case SDL_SCANCODE_ESCAPE:
-                    isRunning = false;
-                    printf("close app\n");
-                    break;
-                case SDL_SCANCODE_W: 
-                case SDL_SCANCODE_UP: 
-                    dest.y -= speed / 30; 
-                    break; 
-                case SDL_SCANCODE_A: 
-                case SDL_SCANCODE_LEFT: 
-                    dest.x -= speed / 30; 
-                    break; 
-                case SDL_SCANCODE_S: 
-                case SDL_SCANCODE_DOWN: 
-                    dest.y += speed / 30; 
-                    break; 
-                case SDL_SCANCODE_D: 
-                case SDL_SCANCODE_RIGHT: 
-                    dest.x += speed / 30; 
-                    break; 
-                default:
-                    break;
-            } 
-        } 
+            if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) { // exit game
+                isRunning = false;
+                break;
+            }
+            player1->move(event); // player
+            player2->move(event);
+
+        } else if (event.type == SDL_QUIT) { // exit game if window is closed
+            isRunning = false;
+            break;
+        }
     } 
 
-    // right boundary 
-    if (dest.x + dest.w > 1000) {
-        dest.x = 1000 - dest.w; 
-    }
-
-    // left boundary 
-    if (dest.x < 0) {
-        dest.x = 0; 
-    }
-
-    // bottom boundary 
-    if (dest.y + dest.h > 1000) {
-        dest.y = 1000 - dest.h; 
-    }
-
-    // upper boundary 
-    if (dest.y < 0) {
-        dest.y = 0; 
-    }
 }
 
 
@@ -161,19 +107,19 @@ void Game::update() {
     count++;
     destRect.h = 128;
     destRect.w = 128;
-
-    //map->LoadMap(); todo text file with different arrays
+    ball->move();
 }
 
 void Game::render() {
     SDL_SetRenderDrawColor(renderer, 255,255,255,255); // set color to write
     SDL_RenderClear(renderer); // clear renderer with latest set color
 
-    //SDL_Rect block1;
-    //renderBlock(window, &block1); // TODO render background function that renders all the blocks, also sets boundaries for player
     map->DrawMap();
-    SDL_RenderCopy(renderer, playerTex, NULL, &dest); // player
-    //SDL_RenderCopy(renderer, map->water, NULL, &(map->dest));
+
+    //render game objects
+    player1->render(renderer); // player
+    player2->render(renderer);
+    ball->render(renderer);
 
     SDL_RenderPresent(renderer);
 }

@@ -1,8 +1,6 @@
 #include "TextureManager.hpp"
 #include "Game.hpp"
 
-// TODO create ball class - move across screen
-
 GameObject::GameObject(const char* texturesheet) {
 
     objTexture = TextureManager::LoadTexture(texturesheet);
