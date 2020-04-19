@@ -1,9 +1,11 @@
 #include "Ball.hpp"
 #include "TextureManager.hpp"
+#include <math.h>
 
 const char* Ball::BALL_FILE = "../assets/ball.png";
 const int SCREEN_HEIGHT = 640;
 const int SCREEN_WIDTH = 800;
+const int ANGLE_RANGE = 4;
 
 Ball::Ball() {}
 Ball::~Ball() {}
@@ -27,12 +29,13 @@ void Ball::init() {
     dest.y = (SCREEN_HEIGHT - dest.h) / 2;
 
     // speed of ball
-    speed = -300;
+    velocity_x = -2;
+    velocity_y = 0;
 }
 
 void Ball::move(const SDL_Rect* player_rect) {
     // dest.y += speed / 50;
-    dest.x += speed / 100;
+
 
     // right boundary 
     if (dest.x + dest.w > SCREEN_WIDTH) {
@@ -43,22 +46,28 @@ void Ball::move(const SDL_Rect* player_rect) {
 
     //hits player paddle
     else if (SDL_HasIntersection(player_rect, &dest)) {
-        speed *= -1;
-        dest.y += speed / 100; // TODO change angle of y 
-        dest.x += speed / 100; 
+        velocity_x *= -1;
+        velocity_y = rand() % ANGLE_RANGE - (ANGLE_RANGE-1);
+        // velocity_y =  dest.y - player_rect->y;
     }
 
     // rebound bottom/top boundary 
 
     //lower boundary
-    if (dest.y + dest.h > SCREEN_HEIGHT || dest.y < 0) {
+    if (dest.y + dest.h >= SCREEN_HEIGHT) {
         dest.y = SCREEN_HEIGHT - dest.h; 
+        velocity_y *= -1;
     }
 
     // upper boundary 
-    if (dest.y < 0) {
+    if (dest.y - dest.h <= 0) {
         dest.y = 0; 
+        velocity_y *= -2;
     }
+
+    dest.x += velocity_x;
+    dest.y += velocity_y;
+
 }
 
 void Ball::render(SDL_Renderer* renderer) {

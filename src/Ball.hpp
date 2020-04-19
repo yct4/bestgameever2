@@ -10,7 +10,7 @@ public:
     Ball();
     ~Ball();
 
-    int speed = 300;
+
 
     void init();
     void move(const SDL_Rect* player);
@@ -25,6 +25,8 @@ private:
     SDL_Rect srcRect, destRect;
     SDL_Texture* ballTex;
 
+    int velocity_x = -2;
+    int velocity_y = 0;
 
 };
 
