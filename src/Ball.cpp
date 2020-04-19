@@ -27,7 +27,7 @@ void Ball::init() {
     dest.y = (SCREEN_HEIGHT - dest.h) / 2;
 
     // speed of ball
-    speed = 300;
+    speed = -300;
 }
 
 void Ball::move(const SDL_Rect* player_rect) {
@@ -43,8 +43,9 @@ void Ball::move(const SDL_Rect* player_rect) {
 
     //hits player paddle
     else if (SDL_HasIntersection(player_rect, &dest)) {
-        dest.y -= speed / 100; // TODO change angle of y 
-        dest.x -= speed / 100; 
+        speed *= -1;
+        dest.y += speed / 100; // TODO change angle of y 
+        dest.x += speed / 100; 
     }
 
     // rebound bottom/top boundary 
