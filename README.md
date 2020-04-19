@@ -15,7 +15,7 @@ Game is over if ball travels past the paddle.
 2. Animate a moving ball on the screen. (One class.) - X
 - Collision detection.
   - paddles - X
-  - sides (top and bottom)
+  - sides (top and bottom) // TODO(need to fix odd bouncing)
   - disappears/game stops if going past the end 
 - Trajectory of ball. 
   - left to right - X 
