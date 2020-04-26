@@ -48,21 +48,20 @@ void Ball::move(const SDL_Rect* player_rect) {
     else if (SDL_HasIntersection(player_rect, &dest)) {
         velocity_x *= -1;
         velocity_y = rand() % ANGLE_RANGE - (ANGLE_RANGE-1);
-        // velocity_y =  dest.y - player_rect->y;
     }
 
     // rebound bottom/top boundary 
 
-    //lower boundary
+    //lower boundary, dest.x is for upper left corner
     if (dest.y + dest.h >= SCREEN_HEIGHT) {
         dest.y = SCREEN_HEIGHT - dest.h; 
         velocity_y *= -1;
     }
 
-    // upper boundary 
-    if (dest.y - dest.h <= 0) {
+    // upper boundary, dest.y is for upper left corner of the ball
+    if (dest.y <= 0) {
         dest.y = 0; 
-        velocity_y *= -2;
+        velocity_y *= -1;
     }
 
     dest.x += velocity_x;

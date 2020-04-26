@@ -18,8 +18,8 @@ Game is over if ball travels past the paddle.
   - sides (top and bottom)
   - disappears/game stops if going past the end 
 - Trajectory of ball. 
-  - left to right - X 
-  - angles
+  - left to right - X
+  - angles of bounce (TODO: make this dependent on where the ball hits the paddle)
 - How to speed up ball. 
 2.5. Player class
 - Parameterized initial position.
