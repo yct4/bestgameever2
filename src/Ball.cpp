@@ -34,8 +34,6 @@ void Ball::init() {
 }
 
 void Ball::move(const SDL_Rect* player_rect) {
-    // dest.y += speed / 50;
-
 
     // right boundary 
     if (dest.x + dest.w > SCREEN_WIDTH) {

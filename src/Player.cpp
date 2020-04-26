@@ -21,15 +21,11 @@ void Player::init(int _x, int _y, int _up, int _down) {
     dest.w /= 1.5;
     dest.h /= 1.5;
 
-    // sets initial x-position of object middle of screen
-    dest.x = _x;//(SCREEN_WIDTH - dest.w) / 2;
+    // sets initial x-position of object
+    dest.x = _x;
 
-    // sets initial y-position of object middle of screen
-    dest.y = _y;//(SCREEN_HEIGHT - dest.h) / 2;
-
-    // keybindings
-    // scancode_up = _up;
-    // scancode_down = _down;
+    // sets initial y-position of object
+    dest.y = _y;
 
     // speed of player
     speed = 300;
@@ -50,9 +46,6 @@ void Player::move(SDL_Event& event) {
     } else if (event.key.keysym.scancode == scancode_down) {
         dest.y += speed / 10;
     }
-
-    // dest.y += speed / 30;
-    // dest.x += speed / 30;
 
     // right boundary 
     if (dest.x + dest.w > SCREEN_WIDTH) {
