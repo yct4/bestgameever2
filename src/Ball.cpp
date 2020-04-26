@@ -5,7 +5,7 @@
 const char* Ball::BALL_FILE = "../assets/ball.png";
 const int SCREEN_HEIGHT = 640;
 const int SCREEN_WIDTH = 800;
-const int ANGLE_RANGE = 4;
+const int ANGLE_RANGE = 5;
 
 Ball::Ball() {}
 Ball::~Ball() {}
@@ -45,7 +45,7 @@ void Ball::move(const SDL_Rect* player_rect) {
     //hits player paddle
     else if (SDL_HasIntersection(player_rect, &dest)) {
         velocity_x *= -1;
-        velocity_y = rand() % ANGLE_RANGE - (ANGLE_RANGE-1);
+        velocity_y = rand() % ANGLE_RANGE - (ANGLE_RANGE-1) / 2;
     }
 
     // rebound bottom/top boundary 
