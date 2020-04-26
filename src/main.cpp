@@ -15,6 +15,13 @@ int main(int argc, char *argv[]) {
     game = new Game();
     game->init("test game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 640, false);
 
+    // TODO if game isnt running render start screen and wait for game to start
+    // TODO add handler to detect overall exit from game
+
+    if (!game->running()) {
+        game->renderStartScreen();
+    }
+
     while (game->running()) {
 
         frameStart = SDL_GetTicks();
@@ -28,6 +35,8 @@ int main(int argc, char *argv[]) {
             SDL_Delay(frameDelay - frameTime);
         }
     }
+    // TODO add handler to detect overall exit from game
+    // TODO render start screen 
 
     game->clean();
 

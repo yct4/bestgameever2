@@ -32,7 +32,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
     }
 
     // init other variables
-    isRunning = true;
+    isRunning = false;
 
     // init map
     map = new Map();
@@ -52,7 +52,11 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
     player2->init(x2_init, y1_init, SDL_SCANCODE_W, SDL_SCANCODE_S);
 }
 
-
+// TODO game start screen
+/* detect hitting a button to start the game
+// TODO game end screen
+detect hitting a button to end the game
+*/
 void Game::DrawMap() {
     int type = 0;
 
@@ -86,7 +90,8 @@ void Game::handleEvents() {
 
     // Events mangement 
     while (SDL_PollEvent(&event)) { 
-
+        // TODO check when game is over (the game is over when the ball hits either right or left walls)
+            // set isRunning = false
         if (event.type == SDL_KEYDOWN){ 
             if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) { // exit game
                 isRunning = false;
