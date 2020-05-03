@@ -13,7 +13,7 @@ public:
 
 
     void init();
-    void move(const SDL_Rect* player);
+    int move(const SDL_Rect* player);
     void render(SDL_Renderer* render);
     void change_spd();
 
@@ -21,7 +21,6 @@ public:
 
 private:
     SDL_Rect dest;
-    SDL_Texture* ballTexture;
     SDL_Rect srcRect, destRect;
     SDL_Texture* ballTex;
 

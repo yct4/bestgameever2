@@ -3,7 +3,6 @@
 
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
-// #include "GameObject.hpp"
 #include "Map.hpp"
 #include "Ball.hpp"
 #include "Player.hpp"
@@ -26,6 +25,8 @@ class Game {
         void render();
         void clean();
 
+        void renderStartScreen();
+
         void playerJump();
         void playerRun();
 
@@ -35,17 +36,17 @@ class Game {
             return isRunning;
         };
 
+        bool exiting() {
+            return isExited;
+        };
+
 
 
     private:
         SDL_Window* window;
         bool isRunning;
+        bool isExited;
         int count = 0;
-        // SDL_Rect dest;
-        // SDL_Texture* playerTexture;
-        // SDL_Rect srcRect, destRect;
-        // SDL_Texture* playerTex;
-        // GameObject* player;
         Map* map;
         Ball* ball;
         Player* player1;

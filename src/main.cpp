@@ -4,6 +4,8 @@
 
 Game* game;
 
+void waitInStartScreen();
+
 int main(int argc, char *argv[]) {
 
     const int FPS = 40;
@@ -18,27 +20,39 @@ int main(int argc, char *argv[]) {
     // TODO if game isnt running render start screen and wait for game to start
     // TODO add handler to detect overall exit from game
 
-    if (!game->running()) {
-        game->renderStartScreen();
-    }
+    waitInStartScreen();
 
-    while (game->running()) {
+    while (!game->exiting()) {
 
         frameStart = SDL_GetTicks();
 
         game->handleEvents();
         game->update();
+
+        if(!game->running()) {
+            waitInStartScreen();
+        }
+
         game->render();
 
         frameTime = SDL_GetTicks() - frameStart; // how long handleever, update, and render takes
         if (frameDelay > frameTime) {
             SDL_Delay(frameDelay - frameTime);
         }
+
+
     }
     // TODO add handler to detect overall exit from game
     // TODO render start screen 
 
+
     game->clean();
 
     return EXIT_SUCCESS;
+}
+
+void waitInStartScreen() {
+    while (!game->running()) {
+        game->renderStartScreen();
+    }
 }

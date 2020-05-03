@@ -33,13 +33,14 @@ void Ball::init() {
     velocity_y = 0;
 }
 
-void Ball::move(const SDL_Rect* player_rect) {
+// returns 1 when game over else returns 0
+int Ball::move(const SDL_Rect* player_rect) {
 
     // right boundary 
-    if (dest.x + dest.w > SCREEN_WIDTH) {
-        dest.x = SCREEN_WIDTH - dest.w; // TODO game over
+    if (dest.x + dest.w > SCREEN_WIDTH) { // TODO point system, reset ball back to start position and velocity
+        return 1; // game over
     } else if (dest.x < 0) { // left boundary
-        dest.x = 0; 
+        return 1; // game over
     }
 
     //hits player paddle
@@ -65,6 +66,7 @@ void Ball::move(const SDL_Rect* player_rect) {
     dest.x += velocity_x;
     dest.y += velocity_y;
 
+    return 0;
 }
 
 void Ball::render(SDL_Renderer* renderer) {
