@@ -4,6 +4,8 @@
 
 Game* game;
 
+void waitInStartScreen();
+
 int main(int argc, char *argv[]) {
 
     const int FPS = 40;
@@ -15,7 +17,12 @@ int main(int argc, char *argv[]) {
     game = new Game();
     game->init("test game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 640, false);
 
-    while (game->running()) {
+    // TODO if game isnt running render start screen and wait for game to start
+    // TODO add handler to detect overall exit from game
+
+    waitInStartScreen();
+
+    while (!game->exiting()) {
 
         frameStart = SDL_GetTicks();
 
@@ -27,9 +34,22 @@ int main(int argc, char *argv[]) {
         if (frameDelay > frameTime) {
             SDL_Delay(frameDelay - frameTime);
         }
+
+        if(!game->running()) {
+            waitInStartScreen();
+        }
     }
+    // TODO add handler to detect overall exit from game
+    // TODO render start screen 
+
 
     game->clean();
 
     return EXIT_SUCCESS;
+}
+
+void waitInStartScreen() {
+    while (!game->running()) {
+        game->renderStartScreen();
+    }
 }
