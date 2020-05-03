@@ -23,9 +23,11 @@ void Player::init(int _x, int _y, int _up, int _down) {
 
     // sets initial x-position of object
     dest.x = _x;
+    init_x = _x;
 
     // sets initial y-position of object
     dest.y = _y;
+    init_y = _y;
 
     // speed of player
     speed = 300;
@@ -67,4 +69,12 @@ void Player::move(SDL_Event& event) {
         dest.y = 0; 
     }
 
+}
+
+void Player::reset() {
+    // sets initial x-position of object
+    dest.x = init_x;
+
+    // sets initial y-position of object
+    dest.y = init_y;
 }

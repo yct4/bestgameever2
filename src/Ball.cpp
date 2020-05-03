@@ -73,4 +73,14 @@ void Ball::render(SDL_Renderer* renderer) {
     SDL_RenderCopy(renderer, ballTex, NULL, &dest);
 }
 
-void Ball::change_spd() {}
+void Ball::reset() {
+    // sets initial x-position of object middle of screen
+    dest.x = (SCREEN_WIDTH - dest.w) / 2;
+
+    // sets initial y-position of object middle of screen
+    dest.y = (SCREEN_HEIGHT - dest.h) / 2;
+
+    // speed of ball
+    velocity_x = -2;
+    velocity_y = 0;
+}

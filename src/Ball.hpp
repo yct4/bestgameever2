@@ -15,7 +15,7 @@ public:
     void init();
     int move(const SDL_Rect* player);
     void render(SDL_Renderer* render);
-    void change_spd();
+    void reset();
 
     static const char* BALL_FILE;
 

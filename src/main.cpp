@@ -28,11 +28,6 @@ int main(int argc, char *argv[]) {
 
         game->handleEvents();
         game->update();
-
-        if(!game->running()) {
-            waitInStartScreen();
-        }
-
         game->render();
 
         frameTime = SDL_GetTicks() - frameStart; // how long handleever, update, and render takes
@@ -40,7 +35,9 @@ int main(int argc, char *argv[]) {
             SDL_Delay(frameDelay - frameTime);
         }
 
-
+        if(!game->running()) {
+            waitInStartScreen();
+        }
     }
     // TODO add handler to detect overall exit from game
     // TODO render start screen 

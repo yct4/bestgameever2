@@ -113,6 +113,7 @@ void Game::update() {
 
     if (game_over1 || game_over2) {
         isRunning = false;
+        reset();
     }
 }
 
@@ -178,6 +179,12 @@ void Game::renderStartScreen() {
     // render screen
     SDL_RenderPresent(renderer);
 
+}
+
+void Game::reset() { // reset player and ball to initial positions and reset ball velocity
+    player1->reset();
+    player2->reset();
+    ball->reset();
 }
 
 void Game::clean() {

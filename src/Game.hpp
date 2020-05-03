@@ -24,6 +24,7 @@ class Game {
         void update();
         void render();
         void clean();
+        void reset();
 
         void renderStartScreen();
 

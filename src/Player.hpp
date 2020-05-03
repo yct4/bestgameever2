@@ -15,6 +15,7 @@ public:
     void init(int _x, int _y, int _up, int _down);
     void render(SDL_Renderer* render);
     void move(SDL_Event& event);
+    void reset();
     SDL_Rect* get_Rect();
 
     static const char* PLAYER_FILE;
@@ -26,6 +27,9 @@ private:
     SDL_Texture* playerTex;
     const int scancode_up;
     const int scancode_down;
+
+    int init_x;
+    int init_y;
 
     // TODO add parameterized key bindings
     // TODO add parameterized initial positions
