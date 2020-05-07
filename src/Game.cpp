@@ -35,6 +35,14 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
     // init other variables
     isRunning = false;
 
+    // initialize start button
+    buttonTex = TextureManager::LoadTexture(START_BUTTON_FILE);
+    // connects our texture with startButtonRect to control position
+    SDL_QueryTexture(buttonTex, NULL, NULL, &startButtonRect.w, &startButtonRect.h);
+        // sets initial position of object middle of screen
+    startButtonRect.x = (SCREEN_WIDTH - startButtonRect.w) / 2;
+    startButtonRect.y = (SCREEN_HEIGHT - startButtonRect.h) / 2;
+
     // init map
     map = new Map();
 
@@ -43,21 +51,17 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
     ball->init();
 
     player1 = new Player(SDL_SCANCODE_UP, SDL_SCANCODE_DOWN);
-    int x1_init = (SCREEN_WIDTH - 20 * player1->get_Rect()->w) ; // right side
-    int y1_init = (SCREEN_HEIGHT - player1->get_Rect()->h) / 2; // starts in the middle
+    int x1_init = (SCREEN_WIDTH - 27 / 1.5) ; // right side -- player image width is 27 and scaling factor is 1.5
+    int y1_init = (SCREEN_HEIGHT - 208 / 1.5) / 2; // starts in the middle -- player image height is 27 and scaling factor is 1.5
     player1->init(x1_init, y1_init, SDL_SCANCODE_UP, SDL_SCANCODE_DOWN);
 
     player2 = new Player(SDL_SCANCODE_W, SDL_SCANCODE_S);
     int x2_init = 0; // left side
-    int y2_init = (SCREEN_HEIGHT - player2->get_Rect()->h) / 2; // starts in the middle
+    int y2_init = (SCREEN_HEIGHT - 208/1.5) / 2; // starts in the middle -- player image height is 27 and scaling factor is 1.5
     player2->init(x2_init, y1_init, SDL_SCANCODE_W, SDL_SCANCODE_S);
 }
 
-// TODO game start screen
-/* detect hitting a button to start the game
-// TODO game end screen
-detect hitting a button to end the game
-*/
+// TODO: for other games, unsused in pong
 void Game::DrawMap() {
     int type = 0;
 
@@ -130,7 +134,6 @@ void Game::render() {
 }
 
 void Game::renderStartScreen() {
-    SDL_Rect dest;
     SDL_Event event; 
     int mouse_x = 0;
     int mouse_y = 0;
@@ -138,28 +141,13 @@ void Game::renderStartScreen() {
     SDL_SetRenderDrawColor(renderer, 0,0,0,0); // set color to write
     SDL_RenderClear(renderer); // clear renderer with latest set color
 
-    // initialize start button
-     SDL_Texture* buttonTex = TextureManager::LoadTexture(START_BUTTON_FILE);
-
-    // connects our texture with dest to control position
-    SDL_QueryTexture(buttonTex, NULL, NULL, &dest.w, &dest.h);
-
-    // adjust height and width of our image box.
-    // dest.w *= 2;
-    // dest.h *= 2;
-
-    // sets initial position of object middle of screen
-    dest.x = (SCREEN_WIDTH - dest.w) / 2;
-    dest.y = (SCREEN_HEIGHT - dest.h) / 2;
-
-
     // Events mangement
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_MOUSEBUTTONDOWN) { // clicked on start button
             if (event.button.button == SDL_BUTTON_LEFT) {
                 mouse_x = event.button.x;
                 mouse_y = event.button.y;
-                if( ( mouse_x > dest.x ) && ( mouse_x < dest.x + dest.w ) && ( mouse_y > dest.y ) && ( mouse_y < dest.y + dest.h ) ) {
+                if( ( mouse_x > startButtonRect.x ) && ( mouse_x < startButtonRect.x + startButtonRect.w ) && ( mouse_y > startButtonRect.y ) && ( mouse_y < startButtonRect.y + startButtonRect.h ) ) {
                     isRunning = true;
                 }
             }
@@ -174,7 +162,7 @@ void Game::renderStartScreen() {
     } 
 
     // render start button to screen
-    SDL_RenderCopy(renderer, buttonTex, NULL, &dest);
+    SDL_RenderCopy(renderer, buttonTex, NULL, &startButtonRect);
 
     // render screen
     SDL_RenderPresent(renderer);

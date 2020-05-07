@@ -31,9 +31,6 @@ private:
     int init_x;
     int init_y;
 
-    // TODO add parameterized key bindings
-    // TODO add parameterized initial positions
-
 };
 
 #endif // Player_hpp

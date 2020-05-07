@@ -17,9 +17,6 @@ int main(int argc, char *argv[]) {
     game = new Game();
     game->init("test game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 640, false);
 
-    // TODO if game isnt running render start screen and wait for game to start
-    // TODO add handler to detect overall exit from game
-
     waitInStartScreen();
 
     while (!game->exiting()) {
@@ -39,8 +36,6 @@ int main(int argc, char *argv[]) {
             waitInStartScreen();
         }
     }
-    // TODO add handler to detect overall exit from game
-    // TODO render start screen 
 
 
     game->clean();
