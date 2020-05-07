@@ -154,9 +154,11 @@ void Game::renderStartScreen() {
         } else if (event.type == SDL_KEYDOWN){ 
             if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) {
                 isExited = true;
+                isRunning = true;
             }
         } else if (event.type == SDL_QUIT) { // exit game if window is closed
             isExited = true;
+            isRunning = true;
             break;
         }
     } 
