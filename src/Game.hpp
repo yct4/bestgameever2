@@ -24,11 +24,8 @@ class Game {
         void clean();
         void reset();
 
-        void initStartScreen();
         void renderStartScreen();
-
-        void playerJump();
-        void playerRun();
+        void renderRoundScreen();
 
         static SDL_Renderer* renderer;
 
@@ -40,13 +37,17 @@ class Game {
             return isExited;
         };
 
+        bool waitingBetweenRounds() {
+            return isBetweenRounds;
+        };
+
 
 
     private:
         SDL_Window* window;
         bool isRunning;
         bool isExited;
-        int count = 0;
+        bool isBetweenRounds;
         Map* map;
         Ball* ball;
         Player* player1;
@@ -55,6 +56,10 @@ class Game {
         // start button
         SDL_Rect startButtonRect;
         SDL_Texture* buttonTex;
+
+        // score
+        SDL_Rect numberRect;
+        SDL_Texture* numberTex[];
 };
 
 #endif // Game_hpp

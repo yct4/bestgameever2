@@ -5,6 +5,7 @@
 Game* game;
 
 void waitInStartScreen();
+void waitInRoundScreen();
 
 int main(int argc, char *argv[]) {
 
@@ -32,6 +33,10 @@ int main(int argc, char *argv[]) {
             SDL_Delay(frameDelay - frameTime);
         }
 
+        if(game->waitingBetweenRounds()) {
+            waitInRoundScreen();
+        }
+
         if(!game->running()) {
             waitInStartScreen();
         }
@@ -46,5 +51,11 @@ int main(int argc, char *argv[]) {
 void waitInStartScreen() {
     while (!game->running()) {
         game->renderStartScreen();
+    }
+}
+
+void waitInRoundScreen() {
+    while (game->waitingBetweenRounds()) {
+        game->renderRoundScreen();
     }
 }

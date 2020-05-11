@@ -16,7 +16,10 @@ public:
     void render(SDL_Renderer* render);
     void move(SDL_Event& event);
     void reset();
-    SDL_Rect* get_Rect();
+    bool hasWon();
+    int getScore();
+    void incScore();
+    SDL_Rect* getRect();
 
     static const char* PLAYER_FILE;
 
@@ -30,6 +33,8 @@ private:
 
     int init_x;
     int init_y;
+
+    int score;
 
 };
 

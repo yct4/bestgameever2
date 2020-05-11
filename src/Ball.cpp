@@ -1,4 +1,5 @@
 #include "Ball.hpp"
+#include "Player.hpp"
 #include "TextureManager.hpp"
 #include <math.h>
 
@@ -6,6 +7,7 @@ const char* Ball::BALL_FILE = "../assets/ball.png";
 const int SCREEN_HEIGHT = 640;
 const int SCREEN_WIDTH = 800;
 const int ANGLE_RANGE = 5;
+const int INIT_X_VELOCITY = -4;
 
 Ball::Ball() {}
 Ball::~Ball() {}
@@ -29,22 +31,24 @@ void Ball::init() {
     dest.y = (SCREEN_HEIGHT - dest.h) / 2;
 
     // speed of ball
-    velocity_x = -2;
+    velocity_x = INIT_X_VELOCITY;
     velocity_y = 0;
 }
 
-// returns 1 when game over else returns 0
-int Ball::move(const SDL_Rect* player_rect) {
+// returns 1 while between rounds else returns 0
+bool Ball::move(Player* player1, Player* player2) {
 
     // right boundary 
     if (dest.x + dest.w > SCREEN_WIDTH) { // TODO point system, reset ball back to start position and velocity
-        return 1; // game over
+        player2->incScore();
+        return true;
     } else if (dest.x < 0) { // left boundary
-        return 1; // game over
+        player1->incScore();
+        return true;
     }
 
     //hits player paddle
-    else if (SDL_HasIntersection(player_rect, &dest)) {
+    else if (SDL_HasIntersection(player1->getRect(), &dest) || SDL_HasIntersection(player2->getRect(), &dest)) {
         velocity_x *= -1;
         velocity_y = rand() % ANGLE_RANGE - (ANGLE_RANGE-1) / 2;
     }
@@ -66,7 +70,7 @@ int Ball::move(const SDL_Rect* player_rect) {
     dest.x += velocity_x;
     dest.y += velocity_y;
 
-    return 0;
+    return false;
 }
 
 void Ball::render(SDL_Renderer* renderer) {
@@ -81,6 +85,6 @@ void Ball::reset() {
     dest.y = (SCREEN_HEIGHT - dest.h) / 2;
 
     // speed of ball
-    velocity_x = -2;
+    velocity_x = INIT_X_VELOCITY;
     velocity_y = 0;
 }
