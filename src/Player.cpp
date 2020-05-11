@@ -31,13 +31,16 @@ void Player::init(int _x, int _y, int _up, int _down) {
 
     // speed of player
     speed = 300;
+
+    // player score
+    score = 0;
 }
 
 void Player::render(SDL_Renderer* renderer) {
     SDL_RenderCopy(renderer, playerTex, NULL, &dest); // player
 }
 
-SDL_Rect* Player::get_Rect() {
+SDL_Rect* Player::getRect() {
     return &dest;
 }
 
@@ -77,4 +80,17 @@ void Player::reset() {
 
     // sets initial y-position of object
     dest.y = init_y;
+    score = 0;
+}
+
+bool Player::hasWon() {
+    return score == 5;
+}
+
+int Player::getScore() {
+    return score;
+}
+
+void Player::incScore() {
+    score++;
 }

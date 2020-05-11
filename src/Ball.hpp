@@ -4,6 +4,7 @@
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
 #include "TextureManager.hpp"
+#include "Player.hpp"
 
 class Ball {
 public: 
@@ -13,7 +14,7 @@ public:
 
 
     void init();
-    int move(const SDL_Rect* player);
+    bool move(Player* player1, Player* player2);
     void render(SDL_Renderer* render);
     void reset();
 
@@ -24,7 +25,7 @@ private:
     SDL_Rect srcRect, destRect;
     SDL_Texture* ballTex;
 
-    int velocity_x = -2;
+    int velocity_x = -4;
     int velocity_y = 0;
 
 };

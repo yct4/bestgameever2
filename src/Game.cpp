@@ -2,8 +2,12 @@
 #include "TextureManager.hpp"
 #include "Player.hpp"
 #include <stdio.h>
+#include <vector>
+
+using namespace std;
 
 const char* START_BUTTON_FILE = "../assets/start_button.png";
+const vector<char*> NUMBER_FILES = {"../assets/zero.jpg","../assets/one.png", "../assets/two.jpg", "../assets/three.jpg", "../assets/four.png", "../assets/five.png"};
 const int SCREEN_HEIGHT = 640;
 const int SCREEN_WIDTH = 800;
 SDL_Renderer* Game::renderer = nullptr;
@@ -42,6 +46,16 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         // sets initial position of object middle of screen
     startButtonRect.x = (SCREEN_WIDTH - startButtonRect.w) / 2;
     startButtonRect.y = (SCREEN_HEIGHT - startButtonRect.h) / 2;
+
+    // initialize score number pictures
+    for(int i = 0; i < 5; i++) {
+        numberTex[i] = TextureManager::LoadTexture(NUMBER_FILES[i]);
+
+        SDL_QueryTexture(numberTex[i], NULL, NULL, &numberRect.w, &numberRect.h);
+    }
+    // sets initial position of player2 score to middle of left half of screen
+    numberRect.x = (SCREEN_WIDTH - numberRect.w) / 4;
+    numberRect.y = (SCREEN_HEIGHT - numberRect.h) / 4;
 
     // init map
     map = new Map();
@@ -111,14 +125,8 @@ void Game::handleEvents() {
 
 
 void Game::update() {
-    count++;
-    int game_over1 = ball->move(player1->get_Rect());
-    int game_over2 = ball->move(player2->get_Rect());
+    isBetweenRounds = ball->move(player1, player2);
 
-    if (game_over1 || game_over2) {
-        isRunning = false;
-        reset();
-    }
 }
 
 void Game::render() {
@@ -149,16 +157,19 @@ void Game::renderStartScreen() {
                 mouse_y = event.button.y;
                 if( ( mouse_x > startButtonRect.x ) && ( mouse_x < startButtonRect.x + startButtonRect.w ) && ( mouse_y > startButtonRect.y ) && ( mouse_y < startButtonRect.y + startButtonRect.h ) ) {
                     isRunning = true;
+                    isBetweenRounds = false;
                 }
             }
         } else if (event.type == SDL_KEYDOWN){ 
             if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) {
                 isExited = true;
                 isRunning = true;
+                isBetweenRounds = false;
             }
         } else if (event.type == SDL_QUIT) { // exit game if window is closed
             isExited = true;
             isRunning = true;
+            isBetweenRounds = false;
             break;
         }
     } 
@@ -169,6 +180,57 @@ void Game::renderStartScreen() {
     // render screen
     SDL_RenderPresent(renderer);
 
+}
+
+void Game::renderRoundScreen() {
+    SDL_Event event; 
+    int mouse_x = 0;
+    int mouse_y = 0;
+
+    SDL_SetRenderDrawColor(renderer, 0,0,0,0); // set color to write
+    SDL_RenderClear(renderer); // clear renderer with latest set color
+
+    // Events mangement
+    while (SDL_PollEvent(&event)) {
+        if (event.type == SDL_MOUSEBUTTONDOWN) { // clicked on start button
+            if (event.button.button == SDL_BUTTON_LEFT) {
+                mouse_x = event.button.x;
+                mouse_y = event.button.y;
+                if( ( mouse_x > startButtonRect.x ) && ( mouse_x < startButtonRect.x + startButtonRect.w ) && ( mouse_y > startButtonRect.y ) && ( mouse_y < startButtonRect.y + startButtonRect.h ) ) {
+                    isRunning = true;
+                    isBetweenRounds = false;
+                }
+            }
+        } else if (event.type == SDL_KEYDOWN){ 
+            if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) {
+                isExited = true;
+                isRunning = true;
+                isBetweenRounds = false;
+            }
+        } else if (event.type == SDL_QUIT) { // exit game if window is closed
+            isExited = true;
+            isRunning = true;
+            isBetweenRounds = false;
+            break;
+        }
+    } 
+
+    // render start button to screen
+    SDL_RenderCopy(renderer, buttonTex, NULL, &startButtonRect);
+
+    // render player2 score to screen
+    SDL_RenderCopy(renderer, numberTex[player2->getScore()], NULL, &numberRect);
+
+    // reset game if one player reaches score = 5
+    int game_over1 = player1->hasWon();
+    int game_over2 = player2->hasWon();
+
+    if (game_over1 || game_over2) {
+        isRunning = false;
+        reset();
+    }
+    // render screen
+    SDL_RenderPresent(renderer);
 }
 
 void Game::reset() { // reset player and ball to initial positions and reset ball velocity
