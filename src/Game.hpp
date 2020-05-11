@@ -12,8 +12,6 @@ class Game {
     public:
         int close = 0;
 
-        // speed of box
-        int speed = 300;
         Game();
         ~Game();
 
@@ -26,6 +24,7 @@ class Game {
         void clean();
         void reset();
 
+        void initStartScreen();
         void renderStartScreen();
 
         void playerJump();
@@ -52,6 +51,10 @@ class Game {
         Ball* ball;
         Player* player1;
         Player* player2;
+
+        // start button
+        SDL_Rect startButtonRect;
+        SDL_Texture* buttonTex;
 };
 
 #endif // Game_hpp
