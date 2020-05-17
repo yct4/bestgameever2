@@ -25,8 +25,8 @@ private:
     SDL_Rect srcRect, destRect;
     SDL_Texture* ballTex;
 
-    int velocity_x = -4;
-    int velocity_y = 0;
+    int velocity_x;
+    int velocity_y;
 
 };
 

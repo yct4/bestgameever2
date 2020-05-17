@@ -57,8 +57,13 @@ class Game {
         SDL_Rect startButtonRect;
         SDL_Texture* buttonTex;
 
+        //continue button
+        SDL_Rect continueButtonRect;
+        SDL_Texture* continueButtonTex;
+
         // score
-        SDL_Rect numberRect;
+        SDL_Rect player1ScoreRect;
+        SDL_Rect player2ScoreRect;
         SDL_Texture* numberTex[];
 };
 

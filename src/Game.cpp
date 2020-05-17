@@ -7,6 +7,7 @@
 using namespace std;
 
 const char* START_BUTTON_FILE = "../assets/start_button.png";
+const char* CONTINUE_BUTTON_FILE = "../assets/continue.jpg";
 const vector<char*> NUMBER_FILES = {"../assets/zero.jpg","../assets/one.png", "../assets/two.jpg", "../assets/three.jpg", "../assets/four.png", "../assets/five.png"};
 const int SCREEN_HEIGHT = 640;
 const int SCREEN_WIDTH = 800;
@@ -47,15 +48,34 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
     startButtonRect.x = (SCREEN_WIDTH - startButtonRect.w) / 2;
     startButtonRect.y = (SCREEN_HEIGHT - startButtonRect.h) / 2;
 
+    // initialize start button
+    continueButtonTex = TextureManager::LoadTexture(CONTINUE_BUTTON_FILE);
+    // connects our texture with startButtonRect to control position
+    SDL_QueryTexture(continueButtonTex, NULL, NULL, &continueButtonRect.w, &continueButtonRect.h);
+        // sets initial position of object middle of screen
+    continueButtonRect.h /= 4;
+    continueButtonRect.w /= 4; 
+    continueButtonRect.x = (SCREEN_WIDTH - continueButtonRect.w) / 2;
+    continueButtonRect.y = (SCREEN_HEIGHT - continueButtonRect.h) / 2;
+
     // initialize score number pictures
     for(int i = 0; i < 5; i++) {
         numberTex[i] = TextureManager::LoadTexture(NUMBER_FILES[i]);
 
-        SDL_QueryTexture(numberTex[i], NULL, NULL, &numberRect.w, &numberRect.h);
+        SDL_QueryTexture(numberTex[i], NULL, NULL, &player2ScoreRect.w, &player2ScoreRect.h);
+        SDL_QueryTexture(numberTex[i], NULL, NULL, &player1ScoreRect.w, &player1ScoreRect.h);
+        player2ScoreRect.w /= 4;
+        player2ScoreRect.h /= 4;
+        player1ScoreRect.w /= 4;
+        player1ScoreRect.h /= 4;
+
     }
     // sets initial position of player2 score to middle of left half of screen
-    numberRect.x = (SCREEN_WIDTH - numberRect.w) / 4;
-    numberRect.y = (SCREEN_HEIGHT - numberRect.h) / 4;
+    player2ScoreRect.x = (SCREEN_WIDTH - player2ScoreRect.w) / 4;
+    player2ScoreRect.y = (SCREEN_HEIGHT - player2ScoreRect.h) / 4;
+    // sets initial position of player2 score to middle of right half of screen
+    player1ScoreRect.x = (SCREEN_WIDTH - player1ScoreRect.w) * 3 / 4;
+    player1ScoreRect.y = (SCREEN_HEIGHT - player1ScoreRect.h) / 4;
 
     // init map
     map = new Map();
@@ -196,7 +216,7 @@ void Game::renderRoundScreen() {
             if (event.button.button == SDL_BUTTON_LEFT) {
                 mouse_x = event.button.x;
                 mouse_y = event.button.y;
-                if( ( mouse_x > startButtonRect.x ) && ( mouse_x < startButtonRect.x + startButtonRect.w ) && ( mouse_y > startButtonRect.y ) && ( mouse_y < startButtonRect.y + startButtonRect.h ) ) {
+                if( ( mouse_x > continueButtonRect.x ) && ( mouse_x < continueButtonRect.x + continueButtonRect.w ) && ( mouse_y > continueButtonRect.y ) && ( mouse_y < continueButtonRect.y + continueButtonRect.h ) ) {
                     isRunning = true;
                     isBetweenRounds = false;
                 }
@@ -215,11 +235,11 @@ void Game::renderRoundScreen() {
         }
     } 
 
-    // render start button to screen
-    SDL_RenderCopy(renderer, buttonTex, NULL, &startButtonRect);
+    SDL_RenderCopy(renderer, continueButtonTex, NULL, &continueButtonRect);
 
     // render player2 score to screen
-    SDL_RenderCopy(renderer, numberTex[player2->getScore()], NULL, &numberRect);
+    SDL_RenderCopy(renderer, numberTex[player2->getScore()], NULL, &player2ScoreRect);
+    SDL_RenderCopy(renderer, numberTex[player1->getScore()], NULL, &player1ScoreRect);
 
     // reset game if one player reaches score = 5
     int game_over1 = player1->hasWon();
