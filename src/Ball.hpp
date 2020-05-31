@@ -17,6 +17,7 @@ public:
     bool move(Player* player1, Player* player2);
     void render(SDL_Renderer* render);
     void reset();
+    void resetPosition();
 
     static const char* BALL_FILE;
 
