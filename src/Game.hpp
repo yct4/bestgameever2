@@ -57,9 +57,22 @@ class Game {
         SDL_Rect startButtonRect;
         SDL_Texture* buttonTex;
 
+        //continue button
+        SDL_Rect continueButtonRect;
+        SDL_Texture* continueButtonTex;
+
+        //banners
+        SDL_Rect player1BannerRect;
+        SDL_Texture* player1BannerTex;
+        SDL_Rect player2BannerRect;
+        SDL_Texture* player2BannerTex;
+        SDL_Rect gameOverRect;
+        SDL_Texture* gameOverTex;
+
         // score
-        SDL_Rect numberRect;
-        SDL_Texture* numberTex[];
+        SDL_Rect player1ScoreRect;
+        SDL_Rect player2ScoreRect;
+        SDL_Texture* numberTex[]; // must be last line of class
 };
 
 #endif // Game_hpp

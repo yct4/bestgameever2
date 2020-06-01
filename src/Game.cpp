@@ -7,7 +7,8 @@
 using namespace std;
 
 const char* START_BUTTON_FILE = "../assets/start_button.png";
-const vector<char*> NUMBER_FILES = {"../assets/zero.jpg","../assets/one.png", "../assets/two.jpg", "../assets/three.jpg", "../assets/four.png", "../assets/five.png"};
+const char* CONTINUE_BUTTON_FILE = "../assets/continue.jpg";
+const vector<char*> NUMBER_FILES = {"../assets/zero.jpg","../assets/one.png", "../assets/two.jpg", "../assets/three.jpg", "../assets/four.png", "../assets/five.jpg"};
 const int SCREEN_HEIGHT = 640;
 const int SCREEN_WIDTH = 800;
 SDL_Renderer* Game::renderer = nullptr;
@@ -47,16 +48,56 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
     startButtonRect.x = (SCREEN_WIDTH - startButtonRect.w) / 2;
     startButtonRect.y = (SCREEN_HEIGHT - startButtonRect.h) / 2;
 
+    // initialize start button
+    continueButtonTex = TextureManager::LoadTexture(CONTINUE_BUTTON_FILE);
+    // connects our texture with startButtonRect to control position
+    SDL_QueryTexture(continueButtonTex, NULL, NULL, &continueButtonRect.w, &continueButtonRect.h);
+        // sets initial position of object middle of screen
+    continueButtonRect.h /= 4;
+    continueButtonRect.w /= 4; 
+    continueButtonRect.x = (SCREEN_WIDTH - continueButtonRect.w) / 2;
+    continueButtonRect.y = (SCREEN_HEIGHT - continueButtonRect.h) / 2;
+
     // initialize score number pictures
-    for(int i = 0; i < 5; i++) {
+    for(int i = 0; i < 6; i++) {
         numberTex[i] = TextureManager::LoadTexture(NUMBER_FILES[i]);
 
-        SDL_QueryTexture(numberTex[i], NULL, NULL, &numberRect.w, &numberRect.h);
+        SDL_QueryTexture(numberTex[i], NULL, NULL, &player2ScoreRect.w, &player2ScoreRect.h);
+        SDL_QueryTexture(numberTex[i], NULL, NULL, &player1ScoreRect.w, &player1ScoreRect.h);
+        player2ScoreRect.w /= 4;
+        player2ScoreRect.h /= 4;
+        player1ScoreRect.w /= 4;
+        player1ScoreRect.h /= 4;
+
     }
     // sets initial position of player2 score to middle of left half of screen
-    numberRect.x = (SCREEN_WIDTH - numberRect.w) / 4;
-    numberRect.y = (SCREEN_HEIGHT - numberRect.h) / 4;
+    player2ScoreRect.x = (SCREEN_WIDTH - player2ScoreRect.w) / 4;
+    player2ScoreRect.y = (SCREEN_HEIGHT - player2ScoreRect.h) / 4;
+    // sets initial position of player2 score to middle of right half of screen
+    player1ScoreRect.x = (SCREEN_WIDTH - player1ScoreRect.w) * 3 / 4;
+    player1ScoreRect.y = (SCREEN_HEIGHT - player1ScoreRect.h) / 4;
 
+    // player 1 Banner
+    player1BannerTex = TextureManager::LoadTexture("../assets/player1.png");
+    SDL_QueryTexture(player1BannerTex, NULL, NULL, &player1BannerRect.w, &player1BannerRect.h);
+    player1BannerRect.w /= 4;
+    player1BannerRect.h /= 4;
+    player1BannerRect.x = (SCREEN_WIDTH - player1BannerRect.w) * 3 / 4 - player1ScoreRect.w;
+    player1BannerRect.y = (SCREEN_HEIGHT - player1BannerRect.h) / 4 - player1BannerRect.h - 5;
+
+    // player 2 Banner
+    player2BannerTex = TextureManager::LoadTexture("../assets/player2.png");
+    SDL_QueryTexture(player2BannerTex, NULL, NULL, &player2BannerRect.w, &player2BannerRect.h);
+    player2BannerRect.w /= 4;
+    player2BannerRect.h /= 4;
+    player2BannerRect.x = (SCREEN_WIDTH - player2BannerRect.w) / 4 - player2ScoreRect.w;
+    player2BannerRect.y = (SCREEN_HEIGHT - player2BannerRect.h) / 4 - player2BannerRect.h - 5;
+
+    // game over banner
+    gameOverTex = TextureManager::LoadTexture("../assets/gameOver.png");
+    SDL_QueryTexture(gameOverTex, NULL, NULL, &gameOverRect.w, &gameOverRect.h);
+    gameOverRect.x = (SCREEN_WIDTH - gameOverRect.w) / 2;
+    gameOverRect.y = (SCREEN_HEIGHT - gameOverRect.h) * 3 / 4;
     // init map
     map = new Map();
 
@@ -179,13 +220,17 @@ void Game::renderStartScreen() {
 
     // render screen
     SDL_RenderPresent(renderer);
-
+    reset();
 }
 
 void Game::renderRoundScreen() {
     SDL_Event event; 
     int mouse_x = 0;
     int mouse_y = 0;
+
+    // continue button goes to start screen if one player reaches score = 5
+    int game_over1 = player1->hasWon();
+    int game_over2 = player2->hasWon();
 
     SDL_SetRenderDrawColor(renderer, 0,0,0,0); // set color to write
     SDL_RenderClear(renderer); // clear renderer with latest set color
@@ -196,8 +241,8 @@ void Game::renderRoundScreen() {
             if (event.button.button == SDL_BUTTON_LEFT) {
                 mouse_x = event.button.x;
                 mouse_y = event.button.y;
-                if( ( mouse_x > startButtonRect.x ) && ( mouse_x < startButtonRect.x + startButtonRect.w ) && ( mouse_y > startButtonRect.y ) && ( mouse_y < startButtonRect.y + startButtonRect.h ) ) {
-                    isRunning = true;
+                if( ( mouse_x > continueButtonRect.x ) && ( mouse_x < continueButtonRect.x + continueButtonRect.w ) && ( mouse_y > continueButtonRect.y ) && ( mouse_y < continueButtonRect.y + continueButtonRect.h ) ) {
+                    isRunning = !(game_over1 || game_over2);
                     isBetweenRounds = false;
                 }
             }
@@ -215,22 +260,20 @@ void Game::renderRoundScreen() {
         }
     } 
 
-    // render start button to screen
-    SDL_RenderCopy(renderer, buttonTex, NULL, &startButtonRect);
+    SDL_RenderCopy(renderer, continueButtonTex, NULL, &continueButtonRect);
 
-    // render player2 score to screen
-    SDL_RenderCopy(renderer, numberTex[player2->getScore()], NULL, &numberRect);
-
-    // reset game if one player reaches score = 5
-    int game_over1 = player1->hasWon();
-    int game_over2 = player2->hasWon();
+    // render players' scores to screen
+    SDL_RenderCopy(renderer, numberTex[player2->getScore()], NULL, &player2ScoreRect);
+    SDL_RenderCopy(renderer, numberTex[player1->getScore()], NULL, &player1ScoreRect);
+    SDL_RenderCopy(renderer, player1BannerTex, NULL, &player1BannerRect);
+    SDL_RenderCopy(renderer, player2BannerTex, NULL, &player2BannerRect);
 
     if (game_over1 || game_over2) {
-        isRunning = false;
-        reset();
+        SDL_RenderCopy(renderer, gameOverTex, NULL, &gameOverRect);
     }
     // render screen
     SDL_RenderPresent(renderer);
+    ball->resetPosition();
 }
 
 void Game::reset() { // reset player and ball to initial positions and reset ball velocity

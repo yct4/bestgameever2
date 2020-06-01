@@ -8,6 +8,7 @@ const int SCREEN_HEIGHT = 640;
 const int SCREEN_WIDTH = 800;
 const int ANGLE_RANGE = 5;
 const int INIT_X_VELOCITY = -4;
+const int VELOCITY_INCREMENT = 2;
 
 Ball::Ball() {}
 Ball::~Ball() {}
@@ -59,12 +60,16 @@ bool Ball::move(Player* player1, Player* player2) {
     if (dest.y + dest.h >= SCREEN_HEIGHT) {
         dest.y = SCREEN_HEIGHT - dest.h; 
         velocity_y *= -1;
+        velocity_y -= VELOCITY_INCREMENT;
+        velocity_x += (velocity_x > 0) ? VELOCITY_INCREMENT : -VELOCITY_INCREMENT;
     }
 
     // upper boundary, dest.y is for upper left corner of the ball
     if (dest.y <= 0) {
         dest.y = 0; 
         velocity_y *= -1;
+        velocity_y += VELOCITY_INCREMENT;
+        velocity_x += (velocity_x > 0) ? VELOCITY_INCREMENT : -VELOCITY_INCREMENT;
     }
 
     dest.x += velocity_x;
@@ -87,4 +92,12 @@ void Ball::reset() {
     // speed of ball
     velocity_x = INIT_X_VELOCITY;
     velocity_y = 0;
+}
+
+void Ball::resetPosition() {
+        // sets initial x-position of object middle of screen
+    dest.x = (SCREEN_WIDTH - dest.w) / 2;
+
+    // sets initial y-position of object middle of screen
+    dest.y = (SCREEN_HEIGHT - dest.h) / 2;
 }
